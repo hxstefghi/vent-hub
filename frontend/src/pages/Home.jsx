@@ -9,7 +9,7 @@ function Home() {
       <div className="container mx-auto py-8 sm:py-12 px-4">
         {/* Hero Section */}
         <div className="text-center mb-12 sm:mb-16 max-w-2xl mx-auto">
-          <h1 className="mb-4 sm:mb-6 text-2xl sm:text-3xl lg:text-4xl" style={{ color: '#111827' }}>
+          <h1 className="mb-4 sm:mb-6 text-5xl sm:text-6xl lg:text-7xl" style={{ color: '#111827' }}>
             A Safe Space for Your <span style={{ color: '#F472B6' }}>Thoughts</span>
           </h1>
           <p className="text-base sm:text-lg mb-6 sm:mb-8 px-4" style={{ color: '#6B7280', lineHeight: '1.8' }}>
