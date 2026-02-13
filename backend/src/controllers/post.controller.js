@@ -8,12 +8,11 @@ class PostController {
    */
   async createPost(req, res, next) {
     try {
-      const { content, displayName, mood, color } = req.body;
+      const { content, displayName, color } = req.body;
 
       const post = await postService.createPost({
         content,
         displayName,
-        mood,
         color,
       });
 
@@ -34,12 +33,11 @@ class PostController {
    */
   async getAllPosts(req, res, next) {
     try {
-      const { page, limit, mood, sortBy } = req.query;
+      const { page, limit, sortBy } = req.query;
 
       const options = {
         page: parseInt(page) || 1,
         limit: parseInt(limit) || 10,
-        mood,
         sortBy,
       };
 

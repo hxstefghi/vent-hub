@@ -1,16 +1,16 @@
-import Post from '../models/Post.js';
+import Post from "../models/Post.js";
 
 class PostService {
   /**
    * Create a new post
    */
   async createPost(postData) {
-    const { content, displayName, mood } = postData;
-    
+    const { content, displayName, color } = postData;
+
     const post = await Post.create({
       content,
-      displayName: displayName?.trim() || 'Anonymous',
-      mood
+      displayName: displayName?.trim() || "Anonymous",
+      color: color || "yellow",
     });
 
     return post;
@@ -20,31 +20,23 @@ class PostService {
    * Get all posts with pagination, filtering, and sorting
    */
   async getAllPosts(options = {}) {
-    const {
-      page = 1,
-      limit = 10,
-      mood,
-      sortBy = 'latest'
-    } = options;
+    const { page = 1, limit = 10, sortBy = "latest" } = options;
 
     const skip = (page - 1) * limit;
-    
+
     // Build query
     const query = {};
-    if (mood && ['happy', 'sad', 'angry', 'anxious'].includes(mood)) {
-      query.mood = mood;
-    }
 
     // Determine sort order
     let sort = {};
     switch (sortBy) {
-      case 'latest':
+      case "latest":
         sort = { createdAt: -1 };
         break;
-      case 'oldest':
+      case "oldest":
         sort = { createdAt: 1 };
         break;
-      case 'mostLiked':
+      case "mostLiked":
         sort = { likes: -1, createdAt: -1 };
         break;
       default:
@@ -53,12 +45,8 @@ class PostService {
 
     // Execute queries in parallel
     const [posts, totalPosts] = await Promise.all([
-      Post.find(query)
-        .sort(sort)
-        .skip(skip)
-        .limit(limit)
-        .lean(),
-      Post.countDocuments(query)
+      Post.find(query).sort(sort).skip(skip).limit(limit).lean(),
+      Post.countDocuments(query),
     ]);
 
     const totalPages = Math.ceil(totalPosts / limit);
@@ -73,8 +61,8 @@ class PostService {
         totalPosts,
         postsPerPage: limit,
         hasNextPage,
-        hasPreviousPage
-      }
+        hasPreviousPage,
+      },
     };
   }
 
@@ -83,9 +71,9 @@ class PostService {
    */
   async getPostById(postId) {
     const post = await Post.findById(postId);
-    
+
     if (!post) {
-      throw new Error('Post not found');
+      throw new Error("Post not found");
     }
 
     return post;
@@ -98,11 +86,11 @@ class PostService {
     const post = await Post.findByIdAndUpdate(
       postId,
       { $inc: { likes: 1 } },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     if (!post) {
-      throw new Error('Post not found');
+      throw new Error("Post not found");
     }
 
     return post;
@@ -115,7 +103,7 @@ class PostService {
     const post = await Post.findByIdAndDelete(postId);
 
     if (!post) {
-      throw new Error('Post not found');
+      throw new Error("Post not found");
     }
 
     return post;
@@ -128,10 +116,10 @@ class PostService {
     const stats = await Post.aggregate([
       {
         $group: {
-          _id: '$mood',
-          count: { $sum: 1 }
-        }
-      }
+          _id: "$mood",
+          count: { $sum: 1 },
+        },
+      },
     ]);
 
     const totalPosts = await Post.countDocuments();
@@ -141,7 +129,7 @@ class PostService {
       byMood: stats.reduce((acc, stat) => {
         acc[stat._id] = stat.count;
         return acc;
-      }, {})
+      }, {}),
     };
   }
 }

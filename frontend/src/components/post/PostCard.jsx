@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Smile, Frown, Angry, Zap, MessageCircle } from 'lucide-react'
 
 function PostCard({ post, onLike }) {
   const [isLiking, setIsLiking] = useState(false)
@@ -33,26 +32,6 @@ function PostCard({ post, onLike }) {
     }
   }
 
-  const getMoodStyle = (mood) => {
-    const styles = {
-      happy: { backgroundColor: 'rgba(254, 243, 199, 0.8)', color: '#92400E' },
-      sad: { backgroundColor: 'rgba(219, 234, 254, 0.8)', color: '#1E3A8A' },
-      angry: { backgroundColor: 'rgba(254, 226, 226, 0.8)', color: '#991B1B' },
-      anxious: { backgroundColor: 'rgba(237, 233, 254, 0.8)', color: '#5B21B6' },
-    }
-    return styles[mood] || { backgroundColor: 'rgba(243, 244, 246, 0.8)', color: '#374151' }
-  }
-
-  const getMoodIcon = (mood) => {
-    const icons = {
-      happy: <Smile size={14} />,
-      sad: <Frown size={14} />,
-      angry: <Angry size={14} />,
-      anxious: <Zap size={14} />,
-    }
-    return icons[mood] || <MessageCircle size={14} />
-  }
-
   const formatDate = (dateString) => {
     const date = new Date(dateString)
     const now = new Date()
@@ -68,7 +47,7 @@ function PostCard({ post, onLike }) {
 
   return (
     <div
-      className="mb-4 rounded-xl p-6 transition-all hover:-translate-y-0.5"
+      className="break-inside-avoid rounded-xl p-5 transition-all hover:-translate-y-0.5 cursor-pointer"
       style={{
         ...getColorStyle(post.color || 'yellow'),
         border: `1px solid ${getColorStyle(post.color || 'yellow').borderColor}`,
@@ -76,50 +55,41 @@ function PostCard({ post, onLike }) {
       }}
     >
       {/* Header */}
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-2.5">
-          <div
-            className="w-8 h-8 rounded-full flex items-center justify-center font-medium text-xs"
-            style={{ backgroundColor: 'rgba(0, 0, 0, 0.08)', color: '#374151' }}
-          >
-            {post.displayName.charAt(0).toUpperCase()}
-          </div>
-          <div>
-            <p className="font-medium text-sm" style={{ color: '#374151' }}>{post.displayName}</p>
-            <p className="text-xs mt-0.5" style={{ color: '#6B7280' }}>{formatDate(post.createdAt)}</p>
+      <div className="flex items-start gap-2 mb-3">
+        <div
+          className="w-7 h-7 shrink-0 rounded-full flex items-center justify-center font-medium text-xs"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.08)', color: '#374151' }}
+        >
+          {post.displayName.charAt(0).toUpperCase()}
+        </div>
+        <div className="flex-1 min-w-0 pt-0.5">
+          <div className="flex items-baseline gap-2">
+            <p className="font-medium text-xs truncate" style={{ color: '#374151' }}>{post.displayName}</p>
+            <span className="text-xs shrink-0" style={{ color: '#9CA3AF' }}>•</span>
+            <p className="text-xs shrink-0" style={{ color: '#9CA3AF' }}>{formatDate(post.createdAt)}</p>
           </div>
         </div>
-        <span
-          className="mood-badge"
-          style={{
-            ...getMoodStyle(post.mood),
-            fontSize: '0.75rem',
-            padding: '4px 10px'
-          }}
-        >
-          {getMoodIcon(post.mood)} {post.mood}
-        </span>
       </div>
 
       {/* Content */}
-      <p className="mb-4 whitespace-pre-wrap text-sm leading-relaxed" style={{ color: '#374151' }}>
+      <p className="mb-3 whitespace-pre-wrap text-sm leading-relaxed" style={{ color: '#374151' }}>
         {post.content}
       </p>
 
       {/* Footer */}
-      <div className="flex items-center pt-3" style={{ borderTop: '1px solid rgba(0, 0, 0, 0.06)' }}>
+      <div className="flex items-center pt-2.5" style={{ borderTop: '1px solid rgba(0, 0, 0, 0.06)' }}>
         <button
           onClick={handleLike}
           disabled={isLiking || hasLiked}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all text-xs font-medium"
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg transition-all text-xs font-medium"
           style={
             hasLiked
               ? { backgroundColor: 'rgba(0, 0, 0, 0.08)', color: '#F472B6' }
-              : { backgroundColor: 'transparent', color: '#6B7280' }
+              : { backgroundColor: 'transparent', color: '#9CA3AF' }
           }
         >
           <svg
-            className="w-5 h-5"
+            className="w-4 h-4"
             fill={hasLiked ? 'currentColor' : 'none'}
             stroke="currentColor"
             viewBox="0 0 24 24"

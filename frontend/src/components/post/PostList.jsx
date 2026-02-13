@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { MessageCircle } from 'lucide-react'
 import api from '../../api/axios'
 import PostCard from './PostCard'
@@ -9,17 +9,12 @@ function PostList() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [filters, setFilters] = useState({
-    mood: '',
     sortBy: 'latest',
     page: 1
   })
   const [pagination, setPagination] = useState(null)
 
-  useEffect(() => {
-    fetchPosts()
-  }, [filters])
-
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
     setLoading(true)
     setError('')
 
@@ -27,8 +22,7 @@ function PostList() {
       const params = {
         page: filters.page,
         limit: 10,
-        sortBy: filters.sortBy,
-        ...(filters.mood && { mood: filters.mood })
+        sortBy: filters.sortBy
       }
 
       const response = await api.get('/posts', { params })
@@ -40,7 +34,11 @@ function PostList() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [filters])
+
+  useEffect(() => {
+    fetchPosts()
+  }, [fetchPosts])
 
   const handleLike = async (postId) => {
     try {
@@ -72,7 +70,7 @@ function PostList() {
       <div className="flex items-center justify-center min-h-100">
         <div className="text-center">
           <div className="spinner mx-auto mb-4"></div>
-          <p className="font-medium" style={{ color: '#6B7280' }}>Loading thoughts...</p>
+          <p className="font-medium" style={{ color: '#6B7280' }}>Loading posts...</p>
         </div>
       </div>
     )
@@ -81,43 +79,25 @@ function PostList() {
   return (
     <div className="w-full">
       {/* Filters */}
-      <div className="card mb-6">
-        <div className="flex flex-col sm:flex-row gap-4">
-          {/* Mood Filter */}
-          <div className="flex-1">
-            <label htmlFor="mood-filter" className="block text-sm font-medium mb-2" style={{ color: '#111827' }}>
-              Filter by Mood
-            </label>
-            <select
-              id="mood-filter"
-              value={filters.mood}
-              onChange={(e) => handleFilterChange('mood', e.target.value)}
-              className="select-field"
-            >
-              <option value="">All Moods</option>
-              <option value="happy">Happy</option>
-              <option value="sad">Sad</option>
-              <option value="angry">Angry</option>
-              <option value="anxious">Anxious</option>
-            </select>
-          </div>
-
-          {/* Sort Filter */}
-          <div className="flex-1">
-            <label htmlFor="sort-filter" className="block text-sm font-medium mb-2" style={{ color: '#111827' }}>
-              Sort By
-            </label>
-            <select
-              id="sort-filter"
-              value={filters.sortBy}
-              onChange={(e) => handleFilterChange('sortBy', e.target.value)}
-              className="select-field"
-            >
-              <option value="latest">Latest First</option>
-              <option value="oldest">Oldest First</option>
-              <option value="mostLiked">Most Liked</option>
-            </select>
-          </div>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6 p-3 sm:p-4 rounded-lg" style={{ backgroundColor: 'rgba(244, 114, 182, 0.04)' }}>
+        <p className="text-xs sm:text-sm font-medium" style={{ color: '#6B7280' }}>
+          {pagination?.totalPosts || 0} {pagination?.totalPosts === 1 ? 'post' : 'posts'}
+        </p>
+        <div className="flex items-center gap-2">
+          <label htmlFor="sort-filter" className="text-xs sm:text-sm font-medium" style={{ color: '#6B7280' }}>
+            Sort:
+          </label>
+          <select
+            id="sort-filter"
+            value={filters.sortBy}
+            onChange={(e) => handleFilterChange('sortBy', e.target.value)}
+            className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-gray-200 bg-white"
+            style={{ color: '#374151' }}
+          >
+            <option value="latest">Latest</option>
+            <option value="oldest">Oldest</option>
+            <option value="mostLiked">Most Liked</option>
+          </select>
         </div>
       </div>
 
@@ -136,20 +116,20 @@ function PostList() {
 
       {/* Posts Grid */}
       {posts.length === 0 ? (
-        <div className="card p-12 text-center">
+        <div className="p-8 sm:p-12 text-center rounded-xl" style={{ backgroundColor: 'rgba(244, 114, 182, 0.04)' }}>
           <div className="flex justify-center mb-4">
             <MessageCircle size={48} style={{ color: '#F472B6' }} strokeWidth={1.5} />
           </div>
-          <h3 className="text-xl font-semibold mb-2" style={{ color: '#111827' }}>
-            No thoughts shared yet
+          <h3 className="text-lg sm:text-xl font-semibold mb-2" style={{ color: '#111827' }}>
+            Nothing here yet
           </h3>
-          <p style={{ color: '#6B7280' }}>
-            Be the first one to share your thoughts!
+          <p className="text-sm" style={{ color: '#6B7280' }}>
+            Be the first to post something!
           </p>
         </div>
       ) : (
         <>
-          <div className="space-y-0">
+          <div className="columns-1 sm:columns-2 lg:columns-3 gap-3 sm:gap-4 space-y-3 sm:space-y-4">
             {posts.map((post) => (
               <PostCard key={post._id} post={post} onLike={handleLike} />
             ))}
