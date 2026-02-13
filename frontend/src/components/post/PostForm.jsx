@@ -9,7 +9,6 @@ function PostForm() {
   const [formData, setFormData] = useState({
     content: '',
     displayName: '',
-    mood: 'happy',
     color: 'yellow'
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -29,12 +28,12 @@ function PostForm() {
     e.preventDefault()
 
     if (!formData.content.trim()) {
-      setError('Please share your thoughts')
+      setError('Write something first')
       return
     }
 
     if (formData.content.length > 1000) {
-      setError('Your thoughts must be 1000 characters or less')
+      setError('Too long! Keep it under 1000 characters')
       return
     }
 
@@ -45,7 +44,6 @@ function PostForm() {
       await api.post('/posts', {
         content: formData.content.trim(),
         displayName: formData.displayName.trim() || 'Anonymous',
-        mood: formData.mood,
         color: formData.color
       });
 
@@ -53,7 +51,6 @@ function PostForm() {
       setFormData({
         content: '',
         displayName: '',
-        mood: 'happy',
         color: 'yellow'
       })
 
@@ -62,7 +59,7 @@ function PostForm() {
         navigate('/')
       }, 1500)
     } catch (err) {
-      const message = err.response?.data?.message || 'Failed to create post. Please try again.'
+      const message = err.response?.data?.message || 'Something went wrong. Try again?'
       setError(message)
     } finally {
       setIsSubmitting(false)
@@ -90,7 +87,7 @@ function PostForm() {
           <div className="alert alert-success">
             <div className="flex items-center gap-2">
               <CheckCircle size={16} />
-              <p className="font-medium text-sm">Your thoughts have been shared!</p>
+              <p className="font-medium text-sm">Posted! Taking you back now...</p>
             </div>
           </div>
         )}
@@ -105,7 +102,7 @@ function PostForm() {
         {/* Display Name Input */}
         <div>
           <label htmlFor="displayName" className="block text-sm font-medium mb-2" style={{ color: '#111827' }}>
-            Display Name (Optional)
+            Your Name (if you want)
           </label>
           <input
             id="displayName"
@@ -118,53 +115,33 @@ function PostForm() {
           />
         </div>
 
-        {/* Mood Selector */}
-        <div>
-          <label htmlFor="mood" className="block text-sm font-medium mb-2" style={{ color: '#111827' }}>
-            How are you feeling? <span style={{ color: '#F472B6' }}>*</span>
-          </label>
-          <select
-            id="mood"
-            name="mood"
-            value={formData.mood}
-            onChange={handleChange}
-            required
-            className="select-field"
-          >
-            <option value="happy">Happy</option>
-            <option value="sad">Sad</option>
-            <option value="angry">Angry</option>
-            <option value="anxious">Anxious</option>
-          </select>
-        </div>
-
         {/* Color Picker */}
         <div>
           <label className="block text-sm font-medium mb-3" style={{ color: '#111827' }}>
-            Choose a note color
+            Pick a color for your note
           </label>
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-3">
             {colorOptions.map((color) => (
               <button
                 key={color.value}
                 type="button"
                 onClick={() => setFormData(prev => ({ ...prev, color: color.value }))}
-                className="relative flex flex-col items-center gap-2 p-3 rounded-lg transition-all"
+                className="relative flex flex-col items-center gap-1.5 sm:gap-2 p-2 sm:p-3 rounded-lg transition-all"
                 style={{
                   backgroundColor: formData.color === color.value ? color.bg : 'transparent',
                   border: formData.color === color.value ? `2px solid ${color.preview}` : '2px solid transparent'
                 }}
               >
                 <div
-                  className="w-full h-12 rounded-md shadow-sm"
+                  className="w-full h-10 sm:h-12 rounded-md shadow-sm"
                   style={{ backgroundColor: color.preview }}
                 />
                 <span className="text-xs font-medium" style={{ color: '#6B7280' }}>
                   {color.label}
                 </span>
                 {formData.color === color.value && (
-                  <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: '#F472B6' }}>
-                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <div className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: '#F472B6' }}>
+                    <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
@@ -184,7 +161,7 @@ function PostForm() {
             name="content"
             value={formData.content}
             onChange={handleChange}
-            placeholder="Share your thoughts..."
+            placeholder="Write what you're feeling..."
             required
             rows={6}
             className={`textarea-field ${isOverLimit ? 'border-red-400 focus:ring-red-400' : ''}`}
@@ -205,7 +182,7 @@ function PostForm() {
             disabled={isSubmitting || success || isOverLimit || !formData.content.trim()}
             fullWidth
           >
-            {isSubmitting ? 'Sharing...' : 'Share Your Thoughts'}
+            {isSubmitting ? 'Posting...' : 'Post It'}
           </Button>
         </div>
 
@@ -213,7 +190,7 @@ function PostForm() {
         <div className="flex items-start gap-2 p-4 rounded-lg" style={{ backgroundColor: 'rgba(244, 114, 182, 0.06)' }}>
           <Lock size={14} className="mt-0.5 shrink-0" style={{ color: '#F472B6' }} />
           <p className="text-xs" style={{ color: '#6B7280' }}>
-            Completely anonymous. No tracking, no personal information stored.
+            Nobody knows who you are. We don't track or save any personal info.
           </p>
         </div>
       </div>

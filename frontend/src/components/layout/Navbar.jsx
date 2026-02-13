@@ -5,20 +5,20 @@ function Navbar() {
 
   return (
     <nav className="border-b sticky top-0 z-50 backdrop-blur-sm bg-white/95" style={{ borderColor: '#F3F4F6' }}>
-      <div className="container mx-auto py-4">
+      <div className="container mx-auto py-3 sm:py-4 px-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 group">
-            <span className="text-xl font-semibold" style={{ color: '#111827' }}>
+          <Link to="/" className="flex items-center gap-2 group">
+            <span className="text-lg sm:text-xl font-semibold" style={{ color: '#111827' }}>
               Vent<span style={{ color: '#F472B6' }}>Hub</span>
             </span>
           </Link>
 
           {/* Navigation Links */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             <Link
               to="/"
-              className={`px-4 py-2 rounded-lg font-medium transition-all ${location.pathname === '/'
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 text-sm rounded-lg font-medium transition-all ${location.pathname === '/'
                 ? 'text-white'
                 : 'hover:bg-opacity-50'
                 }`}
@@ -32,7 +32,7 @@ function Navbar() {
             </Link>
             <Link
               to="/create"
-              className={`px-4 py-2 rounded-lg font-medium transition-all ${location.pathname === '/create'
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 text-sm rounded-lg font-medium transition-all ${location.pathname === '/create'
                 ? 'text-white'
                 : 'hover:bg-opacity-50'
                 }`}

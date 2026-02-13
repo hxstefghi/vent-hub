@@ -15,14 +15,6 @@ const postSchema = new mongoose.Schema(
       maxlength: [50, "Display name must not exceed 50 characters"],
       default: "Anonymous",
     },
-    mood: {
-      type: String,
-      enum: {
-        values: ["happy", "sad", "angry", "anxious"],
-        message: "{VALUE} is not a valid mood",
-      },
-      required: [true, "Mood is required"],
-    },
     color: {
       type: String,
       enum: {
@@ -47,7 +39,6 @@ const postSchema = new mongoose.Schema(
 // Indexes for better query performance
 postSchema.index({ createdAt: -1 });
 postSchema.index({ likes: -1 });
-postSchema.index({ mood: 1 });
 
 const Post = mongoose.model("Post", postSchema);
 
