@@ -28,9 +28,9 @@ function Home() {
             <div className="flex justify-center mb-3 sm:mb-4">
               <Lock size={32} className="sm:w-9 sm:h-9" style={{ color: '#F472B6' }} strokeWidth={1.5} />
             </div>
-            <h3 className="text-sm sm:text-base font-semibold mb-2 sm:mb-3" style={{ color: '#111827' }}>
+            {/* <h3 className="text-sm sm:text-base font-semibold mb-2 sm:mb-3" style={{ color: '#111827' }}>
               Completely Anonymous
-            </h3>
+            </h3> */}
             <p style={{ color: '#6B7280', fontSize: '0.8125rem', lineHeight: '1.7' }} className="sm:text-sm">
               No login needed. No one knows who you are. Your secrets stay yours.
             </p>
@@ -39,9 +39,9 @@ function Home() {
             <div className="flex justify-center mb-3 sm:mb-4">
               <MessageCircle size={32} className="sm:w-9 sm:h-9" style={{ color: '#F472B6' }} strokeWidth={1.5} />
             </div>
-            <h3 className="text-sm sm:text-base font-semibold mb-2 sm:mb-3" style={{ color: '#111827' }}>
+            {/* <h3 className="text-sm sm:text-base font-semibold mb-2 sm:mb-3" style={{ color: '#111827' }}>
               Safe Space
-            </h3>
+            </h3> */}
             <p style={{ color: '#6B7280', fontSize: '0.8125rem', lineHeight: '1.7' }} className="sm:text-sm">
               Say what you really feel. No one here will judge you.
             </p>
@@ -50,9 +50,9 @@ function Home() {
             <div className="flex justify-center mb-3 sm:mb-4">
               <Users size={32} className="sm:w-9 sm:h-9" style={{ color: '#F472B6' }} strokeWidth={1.5} />
             </div>
-            <h3 className="text-sm sm:text-base font-semibold mb-2 sm:mb-3" style={{ color: '#111827' }}>
+            {/* <h3 className="text-sm sm:text-base font-semibold mb-2 sm:mb-3" style={{ color: '#111827' }}>
               Community Support
-            </h3>
+            </h3> */}
             <p style={{ color: '#6B7280', fontSize: '0.8125rem', lineHeight: '1.7' }} className="sm:text-sm">
               Connect through shared experiences and mutual understanding.
             </p>
